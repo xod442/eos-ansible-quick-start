@@ -1,0 +1,10 @@
+---
+- hosts: eos_demo_group
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Arista EOS bgp Configuration
+      eos_template:
+        src=bgp.j2
+        provider={{ provider|default(omit) }}

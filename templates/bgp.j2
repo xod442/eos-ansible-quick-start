@@ -1,0 +1,14 @@
+#jinja2: trim_blocks: False
+#jinja2: lstrip_blocks: False
+
+{% set fabricvars = fabric[inventory_hostname] -%}
+
+router bgp {{ fabricvars.asn }}
+   router-id {{ fabricvars.rid }}
+   {% for peer in fabricvars.fabricpeers %}
+   neighbor {{ peer }}
+   neighbor {{ peer[1:9] }} maximum-routes 12000
+   {% endfor %}
+   {% for network in fabricvars.networks %}
+   network {{ network }}
+   {% endfor %}

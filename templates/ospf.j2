@@ -1,0 +1,12 @@
+#jinja2: trim_blocks: False
+#jinja2: lstrip_blocks: False
+
+{% set ospfvars = ospf[inventory_hostname] -%}
+
+router ospf {{ ospfvars.process }}
+   router-id {{ ospfvars.router_id }}
+   redistribute connected
+   {% for net in ospfvars.networks %}
+   network {{ net }} area 0.0.0.0
+   {% endfor %}
+   max-lsa 12000

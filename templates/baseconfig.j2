@@ -1,6 +1,33 @@
 #jinja2: trim_blocks: False
 #jinja2: lstrip_blocks: False
 
-{% for dns_ip in dns_servers %}
-ip name-server vrf default {{ dns_ip }}
+{% set intvars = interface[inventory_hostname] -%}
+{% set mgmtvars = mgmt[inventory_hostname] -%}
+{% set vlanvars = vlan[inventory_hostname] -%}
+
+hostname {{ mgmtvars.hostname }}
+!
+aaa authorization exec default local
+!
+username {{eos_users.name }} privilege 15 role network-admin secret 5 {{ eos_users.passwd }}
+username all privilege 0 nopassword
+username spines privilege 0 nopassword
+!
+interface Loopback 0
+   ip address {{mgmtvars.loopback0_ip}}
+!
+{% for interface in intvars -%}
+interface {{interface}}
+   no switchport
+   {% if intvars[interface].ipv4 is defined %}
+   ip address {{intvars[interface].ipv4}} 255.255.255.252
+{% endif -%}
 {% endfor %}
+!
+ip route 0.0.0.0 0.0.0.0 {{ gateway.gateway }}
+!
+ip routing
+!
+management api http-commands
+   cors allowed-origin all
+   no shutdown
