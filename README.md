@@ -26,18 +26,18 @@ git clone https://github.com/xod442/eos-ansible-quick-start.git
 cd eos-ansible-quick-start
 ```
 
-### Create the Docker Image
+### Create the Docker Image ----if you want to skip this step then  "docker pull xod442/ansible" goto #2
 ```
-docker build -t ansible .
+1- docker build -t ansible .
 ```
 Note: If you want to run Ansible from Source, run:
 ```
-docker build -t ansible-dev -f ./Dockerfile-dev .
+1-A docker build -t ansible-dev -f ./Dockerfile-dev .
 ```
 
 ### Run the Container
 ```
-docker run -i -t -v $(pwd):/ansible-sample ansible
+2- docker run -i -t -v $(pwd):/ansible-sample ansible OR docker run -i -t -v $(pwd):/ansible-sample xod442/ansible
 ```
 
 Note: The ``-v`` will mount the files in this quickstart repo into the root
